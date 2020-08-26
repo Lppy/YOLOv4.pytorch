@@ -200,6 +200,8 @@ arguments:
 
 I take a lot from these repositories:
 
+https://github.com/AlexeyAB/darknet
+
 https://github.com/jwyang/faster-rcnn.pytorch
 
 https://github.com/qqwweee/keras-yolo3
