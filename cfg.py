@@ -4,6 +4,7 @@ Cfg = EasyDict()
 Cfg.batch = 80
 Cfg.TRAIN_EPOCHS = 300
 Cfg.learning_rate = 0.001
+Cfg.num_classes = 80
 Cfg.boxes = 60 # box num
 
 

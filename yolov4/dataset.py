@@ -75,7 +75,7 @@ class Yolo_dataset(Dataset):
             target.append(labels.new_zeros(self.n_anchors, H, W, n_ch))
 
         if n_objs == 0:
-            return target, box_loss_scale
+            return target
 
         anchors = self.anchors.to(device=device)
         anchors_max = anchors / 2.

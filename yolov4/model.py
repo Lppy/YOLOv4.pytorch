@@ -231,7 +231,7 @@ class Neck(nn.Module):
         return x20, x13, x6
 
 class Yolov4Head(nn.Module):
-    def __init__(self, output_ch, anchors, num_classes=80, inference=False):
+    def __init__(self, output_ch, anchors, num_classes, image_size, inference=False):
         super(Yolov4Head, self).__init__()
         self.inference = inference
 
@@ -241,7 +241,7 @@ class Yolov4Head(nn.Module):
         ]))
         # Yolo_inference YoloLayer
         self.yolo1 = Yolo_inference(anchor_mask=[0, 1, 2], num_classes=num_classes,
-            anchors=anchors, num_anchors=9, stride=8)
+            anchors=anchors, stride=8, image_size=image_size)
 
         self.conv3 = Conv_Bn_Activation(128, 256, 3, 2, 'leaky')
         self.CBAx5_1 = nn.Sequential(OrderedDict([
@@ -257,7 +257,7 @@ class Yolov4Head(nn.Module):
         ]))
         
         self.yolo2 = Yolo_inference(anchor_mask=[3, 4, 5], num_classes=num_classes,
-            anchors=anchors, num_anchors=9, stride=16)
+            anchors=anchors, stride=16, image_size=image_size)
 
         self.conv11 = Conv_Bn_Activation(256, 512, 3, 2, 'leaky')
         self.CBAx5_2 = nn.Sequential(OrderedDict([
@@ -273,7 +273,7 @@ class Yolov4Head(nn.Module):
         ]))
         
         self.yolo3 = Yolo_inference(anchor_mask=[6, 7, 8], num_classes=num_classes,
-            anchors=anchors, num_anchors=9, stride=32)
+            anchors=anchors, stride=32, image_size=image_size)
 
     def forward(self, input1, input2, input3):
         x2 = self.out1(input1)
@@ -300,7 +300,7 @@ class Yolov4Head(nn.Module):
 
 
 class Yolov4(nn.Module):
-    def __init__(self, anchors, backbone_weight=None, n_classes=80, image_size=608, inference=False):
+    def __init__(self, anchors, n_classes, image_size, backbone_weight=None, inference=False):
         super(Yolov4, self).__init__()
         self.inference = inference
 
@@ -313,7 +313,7 @@ class Yolov4(nn.Module):
         self.down4 = DownBlock(256, n_resblocks=8)
         self.down5 = DownBlock(512, n_resblocks=4)
         # neck
-        self.neck = Neck(inference)
+        self.neck = Neck(inference=inference)
         
         if backbone_weight:
             pretrained_dict = torch.load(backbone_weight)
@@ -328,13 +328,13 @@ class Yolov4(nn.Module):
             print("Frozen CSPDarknet53 backbone.")
         
         # head
-        self.head = Yolov4Head(output_ch, anchors, num_classes=n_classes, inference=inference)
+        self.head = Yolov4Head(output_ch, anchors, num_classes=n_classes, image_size=image_size, inference=inference)
 
         # self.neck.apply(weights_init)
         self.head.apply(weights_init)
 
         if not self.inference:
-            self.criterion = Yolo_loss(anchors, image_size, n_classes=n_classes)
+            self.criterion = Yolo_loss(anchors, image_size=image_size, n_classes=n_classes)
 
     def train(self, mode=True):
         self.neck.train()

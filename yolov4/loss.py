@@ -66,19 +66,20 @@ def bbox_minmax_iou(boxes_a_min, boxes_a_max, boxes_b_min, boxes_b_max):
     return overlap
 '''
 class Yolo_loss(nn.Module):
-    def __init__(self, anchors, image_size, n_classes=80, n_anchors=3):
+    def __init__(self, anchors, image_size, n_classes):
         super(Yolo_loss, self).__init__()
         self.strides = [8, 16, 32]
         self.image_size = image_size # 608
         self.n_classes = n_classes
-        self.n_anchors = n_anchors
+        
         self.iou_thresh = 0.213 # <1 :Using multiple anchors for a single ground truth
-
-        self.anchors = anchors #[[12, 16], [19, 36], [40, 28], [36, 75], [76, 55], [72, 146], [142, 110], [192, 243], [459, 401]]
-        self.anchor_masks = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
         self.ignore_thresh = 0.7
         self.scale_x_y = 1.05
 
+        self.anchors = anchors #[[12, 16], [19, 36], [40, 28], [36, 75], [76, 55], [72, 146], [142, 110], [192, 243], [459, 401]]
+        self.anchor_masks = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+        self.n_anchors = 3
+        
         self.anchors = torch.tensor(self.anchors)
         self.shifts, self.layered_anchors = [], []
         for l in range(3):

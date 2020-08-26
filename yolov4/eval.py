@@ -43,7 +43,7 @@ class Yolo_eval_dataset(dataset.Dataset):
 
 
 class Yolo_inference(nn.Module):
-    def __init__(self, anchor_mask=[], num_classes=0, anchors=[], num_anchors=9, stride=32, image_size=608):
+    def __init__(self, anchor_mask, num_classes, anchors, stride, image_size):
         super(Yolo_inference, self).__init__()
         self.anchor_mask = anchor_mask
         self.num_classes = num_classes
@@ -181,7 +181,7 @@ def fast_nms(boxes, scores, k, iou_threshold):
 
 
 class YoloV4_eval:
-    def __init__(self, model, n_classes, nms_thresh, conf_thresh=0.000001, max_per_image=100, use_cuda=True, fast=True):
+    def __init__(self, model, n_classes, nms_thresh, conf_thresh, max_per_image=100, use_cuda=True, fast=True):
         self.model = model
         self.n_classes = n_classes
         self.nms_thresh = nms_thresh

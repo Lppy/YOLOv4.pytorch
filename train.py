@@ -29,7 +29,7 @@ def train(model, device, config, logger, epochs=20, log_step=100):
         Checkpoints:     {config.checkpoints}
         Device:          {device.type}
         Images size:     {config.image_size}
-        Dataset classes: {config.classes}
+        Dataset classes: {config.num_classes}
         Train label path:{config.train_label}
         Pretrained:      {config.pretrained}
     \n''')
@@ -43,10 +43,6 @@ def train(model, device, config, logger, epochs=20, log_step=100):
         scheduler.step()
     
     mGPUs = torch.cuda.device_count() > 1
-    # criterion = Yolo_loss(config.anchors, config.image_size, n_classes=config.classes)
-    # if torch.cuda.is_available():
-    #     criterion.cuda()
-    #     criterion = torch.nn.DataParallel(criterion)
 
     model.train()
     model.zero_grad()
@@ -62,8 +58,6 @@ def train(model, device, config, logger, epochs=20, log_step=100):
                 images = images.to(device=device, dtype=torch.float32)
                 bboxes = bboxes.to(device=device)
 
-                # bboxes_pred = model(images)
-                # loss, loss_xy, loss_wh, loss_obj, loss_cls = criterion(bboxes_pred, targets, bboxes)
                 loss, loss_xy, loss_wh, loss_obj, loss_cls = model(images, targets, bboxes)
                 if mGPUs:
                     loss = loss.mean()
@@ -114,8 +108,7 @@ def get_args(**kwargs):
                         help='resume file', dest='resume')
     parser.add_argument('-dir', '--data-dir', type=str, default='./',
                         help='dataset dir', dest='dataset_dir')
-    parser.add_argument('-pretrained', type=str, default=None, help='pretrained yolov4.conv.137')
-    parser.add_argument('-classes', type=int, default=80, help='dataset classes')
+    parser.add_argument('-pretrained', type=str, default='data/yolov4.conv.137.pth', help='pretrained yolov4.conv.137')
 
     args = vars(parser.parse_args())
     for k in args.keys():
@@ -128,7 +121,7 @@ if __name__ == "__main__":
     os.environ["CUDA_VISIBLE_DEVICES"] = cfg.gpu
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    model = Yolov4(cfg.anchors, backbone_weight=cfg.pretrained, n_classes=cfg.classes)
+    model = Yolov4(cfg.anchors, n_classes=cfg.num_classes, image_size=cfg.image_size, backbone_weight=cfg.pretrained)
     if cfg.resume == 'none':
         cfg.init_epoch = 0
     else:

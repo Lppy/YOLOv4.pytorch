@@ -111,8 +111,8 @@ def test(eval_model, dataset):
 def test_coco(model, annotations, cfg, resFile):
     use_cuda = 1 if torch.cuda.is_available() else 0
 
-    eval_model = YoloV4_eval(model, 80, 0.6, use_cuda=use_cuda, fast=not cfg.nonfast)
-    dataset = Yolo_eval_dataset(cfg.images_dir, annotations["images"], mode="coco", target_size=[608, 608])
+    eval_model = YoloV4_eval(model, cfg.num_classes, nms_thresh=0.6, conf_thresh=0.000001, use_cuda=use_cuda, fast=not cfg.nonfast)
+    dataset = Yolo_eval_dataset(cfg.images_dir, annotations["images"], mode="coco", target_size=[cfg.image_size, cfg.image_size])
 
     if not cfg.resume:
         result = test(eval_model, dataset)
@@ -144,8 +144,8 @@ def test_images(model, cfg):
     use_cuda = 1 if torch.cuda.is_available() else 0
 
     images = os.listdir(cfg.images_dir)
-    eval_model = YoloV4_eval(model, 80, 0.6, use_cuda=use_cuda, fast=not cfg.nonfast) # conf_thresh=0.1, 
-    dataset = Yolo_eval_dataset(cfg.images_dir, images, mode='image', target_size=[608, 608])
+    eval_model = YoloV4_eval(model, cfg.num_classes, nms_thresh=0.6, conf_thresh=0.000001, use_cuda=use_cuda, fast=not cfg.nonfast)
+    dataset = Yolo_eval_dataset(cfg.images_dir, images, mode='image', target_size=[cfg.image_size, cfg.image_size])
 
     result = test(eval_model, dataset)
 
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     with torch.no_grad():
-        model = Yolov4(cfg.anchors, inference=True)
+        model = Yolov4(cfg.anchors, n_classes=cfg.num_classes, image_size=cfg.image_size, inference=True)
         pretrained_dict = torch.load(cfg.weight_file)
         model.load_state_dict(pretrained_dict)
 
