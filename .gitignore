@@ -20,3 +20,4 @@ __pycache__/
 checkpoints
 data/coco
 data/test2017
+output

@@ -32,7 +32,7 @@ class Yolo_eval_dataset(dataset.Dataset):
             img = Image.open(os.path.join(self.image_dir, image_name)).convert('RGB')
         elif self.mode == 'image':
             image_name = image_info
-            image_id = image_info[:image_info.rfind('.')]
+            image_id = image_name
             img = Image.open(os.path.join(self.image_dir, image_name)).convert('RGB')
             image_height, image_width = img.height, img.width
 
