@@ -1,6 +1,6 @@
 # YOLO v4
 
-A concise, easy to modify and fast PyTorch implementation for YOLOv4.
+A concise, fast and easy to modify PyTorch implementation for YOLOv4.
 
 
 
@@ -21,11 +21,11 @@ pip install -r requirements.txt
 
 ## Pre-trained model
 
-YOLOv4 weight yolov4.pth is converted from [Tianxiaomo/pytorch-YOLOv4](https://github.com/Tianxiaomo/pytorch-YOLOv4)'s pytorch YOLOv4  [weight](https://drive.google.com/open?id=1wv_LiFeCRYwtpkqREPeI13-gPELBDwuJ). The latter one  is converted from the [official](https://github.com/AlexeyAB/darknet) YOLOv4 [weight](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights).
+YOLOv4 weight [yolov4.pth](https://www.dropbox.com/s/0ii2ijnfunyhdi7/yolov4.pth?dl=0) is converted from [Tianxiaomo/pytorch-YOLOv4](https://github.com/Tianxiaomo/pytorch-YOLOv4)'s pytorch YOLOv4  [weight](https://drive.google.com/open?id=1wv_LiFeCRYwtpkqREPeI13-gPELBDwuJ). The latter one  is converted from the [official](https://github.com/AlexeyAB/darknet) YOLOv4 [weight](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights).
 
 
 
-The pretrained 137 layers weight yolov4.conv.137.pth is converted from Tianxiaomo/pytorch-YOLOv4 which is converted from the official weight.
+The pretrained 137 layers weight [yolov4.conv.137.pth](https://www.dropbox.com/s/ogxid7oliw591tq/yolov4.conv.137.pth?dl=0) is converted from Tianxiaomo/pytorch-YOLOv4 which is converted from the official weight.
 
 
 
@@ -201,6 +201,9 @@ arguments:
 I take a lot from these repositories:
 
 https://github.com/jwyang/faster-rcnn.pytorch
+
 https://github.com/qqwweee/keras-yolo3
+
 https://github.com/Tianxiaomo/pytorch-YOLOv4
+
 https://github.com/miemie2013/Keras-YOLOv4
